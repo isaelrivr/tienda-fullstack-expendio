@@ -1,127 +1,134 @@
-🍺 ExpendioFS
-Sistema de gestión para Expendio de Bebidas — backend REST en Node.js + MySQL con arquitectura MVC, e interfaz web para administración y tienda.
+# 🛒 Tienda Fullstack - Expendio
 
-🏗 Arquitectura MVC
-El proyecto sigue el patrón Modelo – Vista – Controlador:
-CapaCarpetaResponsabilidadModelomodels/Lógica de negocio y acceso a la base de datos (queries SQL)Vistapublic/Archivos estáticos HTML/CSS/JS del panel admin y la tiendaControladorcontrollers/Recibe las peticiones HTTP, llama al modelo y devuelve la respuesta
-El flujo es:
-Cliente HTTP
-    │
-    ▼
- Routes  (routes/)
-    │
-    ▼
- Controller  (controllers/)
-    │
-    ▼
- Model  (models/)
-    │
-    ▼
- MySQL (config/db.js)
+Aplicación web fullstack para la gestión de una tienda tipo expendio. Permite visualizar productos desde una tienda pública y administrarlos desde un panel de administrador.
 
-🗂 Estructura del proyecto
-ExpendioFS/
-├── config/
-│   └── db.js                  # Pool de conexión MySQL
-├── controllers/               # ← Controladores (C en MVC)
-│   ├── clientesController.js
-│   ├── empleadosController.js
-│   ├── productosController.js
-│   ├── proveedoresController.js
-│   ├── sucursalesController.js
-│   └── ventasController.js
-├── models/                    # ← Modelos (M en MVC)
-│   ├── clientes.js
-│   ├── empleados.js
-│   ├── productos.js
-│   ├── proveedores.js
-│   ├── sucursales.js
-│   └── ventas.js
-├── public/                    # ← Vistas (V en MVC)
-│   ├── admin/                 # Panel de administración
-│   └── tienda/                # Vista de tienda
-├── routes/                    # Rutas Express por entidad
-├── expendio_bebidas.sql       # Script de inicialización de la BD
-├── server.js                  # Punto de entrada
-├── dockerfile
-└── docker-compose.yml
+---
 
-⚙️ Requisitos
+## 🚀 Tecnologías utilizadas
 
-Node.js v20+
-MySQL 8.0
-(o usa Docker — ver sección abajo)
+* ⚙️ Backend: Node.js + Express.js
+* 🗄️ Base de datos: MySQL
+* 🎨 Frontend: HTML, CSS, JavaScript
+* 🐳 Contenedores: Docker
 
+---
 
-🚀 Instalación y ejecución
-Opción A — Local (sin Docker)
-1. Clonar el repositorio
-bashgit clone https://github.com/tu-usuario/ExpendioFS.git
-cd ExpendioFS
-2. Instalar dependencias
-bashnpm install
-3. Configurar variables de entorno
-Crea un archivo .env en la raíz del proyecto:
-envDB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=tu_password
-DB_NAME=expendio_bebidas
-PORT=3000
-4. Importar la base de datos
-bashmysql -u root -p < expendio_bebidas.sql
-5. Arrancar el servidor
-bash# Producción
+## 📁 Estructura del proyecto
+
+```
+controllers/     # Lógica de la aplicación
+models/          # Acceso a la base de datos
+routes/          # Definición de rutas (API)
+public/          
+   ├── tienda/   # Interfaz del cliente
+   └── admin/    # Panel de administración
+config/          # Configuración (BD, variables)
+docker-compose.yml
+Dockerfile
+package.json
+README.md
+```
+
+---
+
+## 🧠 Arquitectura
+
+El proyecto sigue una estructura basada en el patrón **MVC (Modelo - Vista - Controlador)**:
+
+* **Modelos:** Manejan la interacción con la base de datos
+* **Controladores:** Procesan la lógica del negocio
+* **Rutas:** Definen los endpoints de la API
+* **Vistas:** Interfaces en la carpeta `/public`
+
+⚠️ Nota: Actualmente el patrón MVC está implementado de forma básica y puede mejorarse separando completamente la lógica de negocio.
+
+---
+
+## 🌐 Funcionalidades
+
+### 🛍️ Tienda (cliente)
+
+* Visualización de productos
+* Interfaz pública accesible
+
+### ⚙️ Panel de administrador
+
+* Gestión de productos (CRUD)
+* Interfaz separada de la tienda
+
+---
+
+## 🔐 Seguridad (pendiente de mejora)
+
+Actualmente el sistema:
+
+* ❌ No cuenta con autenticación
+* ❌ No tiene control de roles (admin/usuario)
+
+👉 Recomendación: implementar login y middleware de autorización.
+
+---
+
+## ⚙️ Instalación y ejecución
+
+### 🔹 Opción 1: Ejecutar localmente
+
+1. Clonar repositorio:
+
+```
+git clone https://github.com/isaelrivr/tienda-fullstack-expendio.git
+cd tu-repo
+```
+
+2. Instalar dependencias:
+
+```
+npm install
+```
+
+3. Configurar base de datos:
+
+* Importar archivo `.sql`
+* Configurar credenciales en el archivo de conexión
+
+4. Ejecutar servidor:
+
+```
 npm start
+```
 
-# Desarrollo (recarga automática con nodemon)
-npm run dev
+---
 
-Opción B — Docker Compose (recomendado)
-No necesitas instalar Node.js ni MySQL en tu máquina.
-1. Clonar el repositorio
-bashgit clone https://github.com/tu-usuario/ExpendioFS.git
-cd ExpendioFS
-2. Levantar los contenedores
-bashdocker compose up --build
+### 🐳 Opción 2: Ejecutar con Docker
 
-La app espera automáticamente a que MySQL esté listo antes de arrancar gracias al healthcheck configurado en el compose.
+```
+docker-compose up --build
+```
 
-3. Para detener los contenedores
-bashdocker compose down
-Contenedores que se levantan:
-ServicioPuerto localApp Node.js3000MySQL 8.03307
+---
 
-🌐 Acceso
-Una vez corriendo (con cualquiera de las dos opciones):
-VistaURLRaíz (redirige a admin) http://localhost:3000/
-Panel de administración http://localhost:3000/admin/index.html
-Tienda http://localhost:3000/tienda/index.html
+## 📡 Endpoints principales
 
-🔌 API REST
-Base URL: http://localhost:3000/api
-Todos los endpoints siguen la misma convención CRUD:
-MétodoRutaDescripciónGET/:recursoListar todosGET/:recurso/:idObtener por IDPOST/:recursoCrear nuevoPUT/:recurso/:idActualizarDELETE/:recurso/:idEliminar
-Recursos disponibles
+```
+GET     /productos
+POST    /productos
+PUT     /productos/:id
+DELETE  /productos/:id
+```
 
-/api/clientes
-/api/empleados
-/api/productos
-/api/proveedores
-/api/sucursales
-/api/ventas
+---
 
-Ejemplo — Registrar una venta
-bashcurl -X POST http://localhost:3000/api/ventas \
-  -H "Content-Type: application/json" \
-  -d '{
-    "sucursal_id": 1,
-    "empleado_id": 2,
-    "cliente_id": 3,
-    "folio": "V-001",
-    "fecha_venta": "2026-05-04",
-    "metodo_pago": "Efectivo",
-    "subtotal": 150.00
-  }'
+## 📌 Mejoras futuras
 
-🛠 Tecnologías
-TecnologíaUsoNode.js 20RuntimeExpress 4Framework HTTPMySQL 8 / mysql2Base de datosdotenvVariables de entornocorsPolítica de CORSnodemonRecarga en desarrolloDocker / ComposeContenerización
+* 🔐 Sistema de autenticación (login)
+* 👥 Control de roles (admin / cliente)
+* 🧩 Separación completa de MVC
+* 📦 API REST estructurada (/api/v1)
+* 🛡️ Validaciones y seguridad (SQL Injection, JWT)
+* 🎨 Mejora de interfaz de usuario
+
+---
+
+## ⭐ Notas
+
+Este proyecto fue desarrollado con fines educativos para comprender el funcionamiento de aplicaciones fullstack, arquitectura MVC y despliegue con Docker.
