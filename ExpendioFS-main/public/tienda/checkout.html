@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - Expendio FS</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+ <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+ <nav class="navbar navbar-expand-lg navbar-expendio">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">
+      <span class="brand-icon">🍺</span> Expendio FS — Tienda
+    </a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-1">
+        <li class="nav-item"><a class="nav-link" href="index.html"><i class="bi bi-shop me-1"></i>Tienda</a></li>
+        <li class="nav-item"><a class="nav-link" href="carrito.html"><i class="bi bi-cart3 me-1"></i>Carrito</a></li>
+        <li class="nav-item ms-2">
+          <button class="btn btn-outline-light btn-sm carrito-badge" id="btnAbrirCarrito">
+            <i class="bi bi-cart3 fs-5"></i>
+            <span class="badge-count" id="carritoCount">0</span>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+  <div class="container mt-4">
+
+    <!-- BREADCRUMB -->
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb" style="font-size:0.85rem;">
+        <li class="breadcrumb-item"><a href="index.html" class="text-decoration-none">Inicio</a></li>
+        <li class="breadcrumb-item"><a href="tienda.html" class="text-decoration-none">Tienda</a></li>
+        <li class="breadcrumb-item"><a href="carrito.html" class="text-decoration-none">Carrito</a></li>
+        <li class="breadcrumb-item active">Checkout</li>
+      </ol>
+    </nav>
+
+    <!-- PASOS -->
+    <div class="d-flex align-items-center gap-2 mb-4" style="font-size:0.85rem;">
+      <span class="badge rounded-pill px-3 py-2 bg-secondary">1. Carrito</span>
+      <i class="bi bi-chevron-right text-muted"></i>
+      <span class="badge rounded-pill px-3 py-2" style="background:var(--primary-900);">2. Datos</span>
+      <i class="bi bi-chevron-right text-muted"></i>
+      <span class="badge rounded-pill px-3 py-2 bg-secondary">3. Confirmación</span>
+    </div>
+
+    <!-- PANTALLA: CARRITO VACÍO -->
+    <div id="pantallaVacia" class="text-center py-5 d-none">
+      <i class="bi bi-cart-x fs-1 text-muted d-block mb-3"></i>
+      <p class="text-muted mb-3">No tienes productos en el carrito.</p>
+      <a href="tienda.html" class="btn btn-primary-exp">
+        <i class="bi bi-shop me-1"></i>Ir a la tienda
+      </a>
+    </div>
+
+    <!-- PANTALLA: FORMULARIO -->
+    <div id="pantallaFormulario">
+      <div class="row g-4">
+
+        <!-- FORMULARIO DE DATOS -->
+        <div class="col-lg-7">
+          <div class="form-card">
+            <h5><i class="bi bi-person-lines-fill me-2"></i>Datos del cliente</h5>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold" style="font-size:0.85rem;">Nombre *</label>
+                <input type="text" class="form-control" id="ckNombre" placeholder="Tu nombre">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold" style="font-size:0.85rem;">Apellido *</label>
+                <input type="text" class="form-control" id="ckApellido" placeholder="Tu apellido">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold" style="font-size:0.85rem;">Teléfono *</label>
+                <input type="tel" class="form-control" id="ckTelefono" placeholder="Ej. 871 123 4567">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold" style="font-size:0.85rem;">Email</label>
+                <input type="email" class="form-control" id="ckEmail" placeholder="correo@ejemplo.com">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-card">
+            <h5><i class="bi bi-geo-alt me-2"></i>Dirección de entrega</h5>
+            <div class="row g-3">
+              <div class="col-12">
+                <label class="form-label fw-semibold" style="font-size:0.85rem;">Calle y número *</label>
+                <input type="text" class="form-control" id="ckDireccion" placeholder="Ej. Av. Juárez 123">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold" style="font-size:0.85rem;">Colonia</label>
+                <input type="text" class="form-control" id="ckColonia" placeholder="Colonia">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold" style="font-size:0.85rem;">Ciudad *</label>
+                <input type="text" class="form-control" id="ckCiudad" placeholder="Ciudad">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold" style="font-size:0.85rem;">Estado</label>
+                <input type="text" class="form-control" id="ckEstado" placeholder="Estado">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold" style="font-size:0.85rem;">C.P.</label>
+                <input type="text" class="form-control" id="ckCP" placeholder="Código postal">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-card">
+            <h5><i class="bi bi-credit-card me-2"></i>Método de pago</h5>
+            <div class="row g-3">
+              <div class="col-12">
+                <div class="form-check mb-2">
+                  <input class="form-check-input" type="radio" name="metodoPago" id="pagoEfectivo" value="Efectivo" checked>
+                  <label class="form-check-label" for="pagoEfectivo">
+                    <i class="bi bi-cash me-1"></i> Efectivo en sucursal / al recibir
+                  </label>
+                </div>
+                <div class="form-check mb-2">
+                  <input class="form-check-input" type="radio" name="metodoPago" id="pagoTarjeta" value="Tarjeta">
+                  <label class="form-check-label" for="pagoTarjeta">
+                    <i class="bi bi-credit-card me-1"></i> Tarjeta de débito/crédito
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="metodoPago" id="pagoTransferencia" value="Transferencia">
+                  <label class="form-check-label" for="pagoTransferencia">
+                    <i class="bi bi-phone me-1"></i> Transferencia / SPEI
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ERROR -->
+          <div id="errorCheckout" class="alert alert-danger d-none" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            <span id="errorMsg"></span>
+          </div>
+
+          <button class="btn btn-primary-exp w-100 py-3" onclick="confirmarPedido()" style="font-size:1rem;">
+            <i class="bi bi-bag-check me-2"></i>Confirmar pedido
+          </button>
+        </div>
+
+        <!-- RESUMEN -->
+        <div class="col-lg-5">
+          <div class="checkout-summary mb-3">
+            <h6 class="fw-bold mb-3" style="color:var(--primary-900);">
+              <i class="bi bi-receipt me-1"></i>Tu pedido
+            </h6>
+            <div id="ckResumenItems"></div>
+            <hr style="border-color:var(--border);">
+            <div class="cs-row"><span>Subtotal</span><span id="ckSubtotal">$0.00</span></div>
+            <div class="cs-row"><span>Envío</span><span class="text-success fw-semibold">Gratis</span></div>
+            <div class="cs-total"><span>Total</span><span id="ckTotal">$0.00</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PANTALLA: CONFIRMACIÓN -->
+    <div id="pantallaConfirmacion" class="d-none">
+      <div class="text-center py-5">
+        <div style="font-size:5rem; margin-bottom:1rem;">✅</div>
+        <h2 class="fw-bold mb-2" style="color:var(--primary-900);">¡Pedido confirmado!</h2>
+        <p class="text-muted mb-1">Gracias por tu compra. Tu pedido ha sido registrado.</p>
+        <p class="text-muted mb-4" id="ckFolio" style="font-size:0.9rem;"></p>
+
+        <div class="checkout-summary mx-auto mb-4" style="max-width:480px; text-align:left;">
+          <h6 class="fw-bold mb-3" style="color:var(--primary-900);">Resumen del pedido</h6>
+          <div id="confirmResumenItems"></div>
+          <hr style="border-color:var(--border);">
+          <div class="cs-row"><span>Método de pago</span><span id="confirmMetodo"></span></div>
+          <div class="cs-total"><span>Total</span><span id="confirmTotal"></span></div>
+        </div>
+
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+          <a href="tienda.html" class="btn btn-primary-exp">
+            <i class="bi bi-shop me-1"></i>Seguir comprando
+          </a>
+          <a href="index.html" class="btn btn-outline-secondary">
+            <i class="bi bi-house me-1"></i>Ir al inicio
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer-expendio mt-5">
+    <div class="container">
+      <div class="d-flex flex-column flexs

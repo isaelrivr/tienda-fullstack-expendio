@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expendio de Bebidas</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-expendio">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">
+      <span class="brand-icon">🍺</span> Expendio FS — Admin
+    </a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-1">
+        <li class="nav-item"><a class="nav-link" href="sucursales.html"><i class="bi bi-building me-1"></i>Sucursales</a></li>
+        <li class="nav-item"><a class="nav-link" href="empleados.html"><i class="bi bi-people me-1"></i>Empleados</a></li>
+        <li class="nav-item"><a class="nav-link" href="clientes.html"><i class="bi bi-person me-1"></i>Clientes</a></li>
+        <li class="nav-item"><a class="nav-link" href="proveedores.html"><i class="bi bi-truck me-1"></i>Proveedores</a></li>
+        <li class="nav-item"><a class="nav-link" href="productos.html"><i class="bi bi-box me-1"></i>Productos</a></li>
+        <li class="nav-item"><a class="nav-link" href="ventas.html"><i class="bi bi-receipt me-1"></i>Ventas</a></li>
+        <li class="nav-item ms-2"><a class="nav-link btn-tienda" href="../tienda/index.html"><i class="bi bi-shop me-1"></i>Ir a la Tienda</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+  <!-- CONTENIDO -->
+  <div class="container mt-4">
+
+    <!-- HERO BANNER -->
+    <div class="hero-banner mb-4">
+      <div class="row align-items-center">
+        <div class="col-lg-8">
+          <h1>¡Bienvenido al Panel de Control!</h1>
+          <p>Gestiona sucursales, empleados, inventario, ventas y más desde un solo lugar.</p>
+          <a href="tienda.html" class="btn btn-accent me-2"><i class="bi bi-shop me-1"></i>Ir a la Tienda</a>
+          <a href="ventas.html" class="btn btn-outline-light"><i class="bi bi-receipt me-1"></i>Ver Ventas</a>
+        </div>
+        <div class="col-lg-4 text-center d-none d-lg-block" style="font-size:6rem; opacity:0.2;">🍺</div>
+      </div>
+    </div>
+
+    <!-- MÓDULOS -->
+    <h5 class="fw-bold mb-3" style="color:var(--text-mid); font-size:0.8rem; text-transform:uppercase; letter-spacing:1px;">Módulos de Gestión</h5>
+    <div class="row g-3">
+
+      <div class="col-sm-6 col-lg-4">
+        <a href="sucursales.html" class="modulo-card">
+          <div class="modulo-icon">🏪</div>
+          <h5>Sucursales</h5>
+          <p>Administra las sucursales del negocio.</p>
+          <span class="btn-ir"><i class="bi bi-arrow-right me-1"></i>Gestionar</span>
+        </a>
+      </div>
+
+      <div class="col-sm-6 col-lg-4">
+        <a href="empleados.html" class="modulo-card">
+          <div class="modulo-icon">👥</div>
+          <h5>Empleados</h5>
+          <p>Controla el personal de cada sucursal.</p>
+          <span class="btn-ir"><i class="bi bi-arrow-right me-1"></i>Gestionar</span>
+        </a>
+      </div>
+
+      <div class="col-sm-6 col-lg-4">
+        <a href="clientes.html" class="modulo-card">
+          <div class="modulo-icon">🙋</div>
+          <h5>Clientes</h5>
+          <p>Registra y consulta la base de clientes.</p>
+          <span class="btn-ir"><i class="bi bi-arrow-right me-1"></i>Gestionar</span>
+        </a>
+      </div>
+
+      <div class="col-sm-6 col-lg-4">
+        <a href="proveedores.html" class="modulo-card">
+          <div class="modulo-icon">🚚</div>
+          <h5>Proveedores</h5>
+          <p>Gestiona contactos y proveedores activos.</p>
+          <span class="btn-ir"><i class="bi bi-arrow-right me-1"></i>Gestionar</span>
+        </a>
+      </div>
+
+      <div class="col-sm-6 col-lg-4">
+        <a href="productos.html" class="modulo-card">
+          <div class="modulo-icon">📦</div>
+          <h5>Productos</h5>
+          <p>Inventario, precios y existencias.</p>
+          <span class="btn-ir"><i class="bi bi-arrow-right me-1"></i>Gestionar</span>
+        </a>
+      </div>
+
+      <div class="col-sm-6 col-lg-4">
+        <a href="ventas.html" class="modulo-card">
+          <div class="modulo-icon">🧾</div>
+          <h5>Ventas</h5>
+          <p>Registro y seguimiento de ventas.</p>
+          <span class="btn-ir"><i class="bi bi-arrow-right me-1"></i>Gestionar</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer-expendio mt-5">
+    <div class="container">
+      <div class="d-flex flex-column flex-lg-row align-items-center justify-content-between gap-3">
+        <span class="fw-bold text-white fs-6">🍺 Expendio FS</span>
+        <ul class="list-inline mb-0">
+          <li class="list-inline-item"><a href="index.html">Inicio</a></li>
+          <li class="list-inline-item ms-3"><a href="tienda.html">Tienda</a></li>
+          <li class="list-inline-item ms-3"><a href="ventas.html">Ventas</a></li>
+        </ul>
+      </div>
+      <hr class="footer-divider">
+      <p class="text-center mb-0" style="font-size:0.8rem;">© 2025 Expendio de Bebidas. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

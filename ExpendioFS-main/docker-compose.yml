@@ -1,0 +1,41 @@
+version: '3.8'
+ 
+services:
+  # ── Base de datos ────────────────────────────────────────────────────────────
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: expendio_bebidas
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./expendio_bebidas.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    # Esperar a que MySQL acepte conexiones antes de arrancar la app
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-prootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+ 
+  # ── Aplicación Node.js ───────────────────────────────────────────────────────
+  app:
+    build: .            # usa el Dockerfile que está en la misma carpeta
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: rootpassword
+      DB_NAME: expendio_bebidas
+      PORT: 3000
+    depends_on:
+      db:
+        condition: service_healthy   # arranca SÓLO cuando MySQL esté listo
+ 
+volumes:
+  db_data:
