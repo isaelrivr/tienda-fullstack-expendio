@@ -6,49 +6,112 @@
   <title>Empleados - Expendio FS</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
- <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-expendio">
-  <div class="container">
-    <a class="navbar-brand" href="index.html">
-      <span class="brand-icon">🍺</span> Expendio FS — Admin
-    </a>
-    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto align-items-lg-center gap-1">
-        <li class="nav-item"><a class="nav-link" href="sucursales.html"><i class="bi bi-building me-1"></i>Sucursales</a></li>
-        <li class="nav-item"><a class="nav-link" href="empleados.html"><i class="bi bi-people me-1"></i>Empleados</a></li>
-        <li class="nav-item"><a class="nav-link" href="clientes.html"><i class="bi bi-person me-1"></i>Clientes</a></li>
-        <li class="nav-item"><a class="nav-link" href="proveedores.html"><i class="bi bi-truck me-1"></i>Proveedores</a></li>
-        <li class="nav-item"><a class="nav-link" href="productos.html"><i class="bi bi-box me-1"></i>Productos</a></li>
-        <li class="nav-item"><a class="nav-link" href="ventas.html"><i class="bi bi-receipt me-1"></i>Ventas</a></li>
-        <li class="nav-item ms-2"><a class="nav-link btn-tienda" href="../tienda/index.html"><i class="bi bi-shop me-1"></i>Ir a la Tienda</a></li>
-      </ul>
+  <nav class="navbar navbar-expand-lg navbar-expendio">
+    <div class="container">
+      <a class="navbar-brand" href="index.html"><span class="brand-icon">🍺</span> Expendio FS — Admin</a>
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-1">
+          <li class="nav-item"><a class="nav-link" href="sucursales.html"><i class="bi bi-building me-1"></i>Sucursales</a></li>
+          <li class="nav-item"><a class="nav-link active" href="empleados.html"><i class="bi bi-people me-1"></i>Empleados</a></li>
+          <li class="nav-item"><a class="nav-link" href="clientes.html"><i class="bi bi-person me-1"></i>Clientes</a></li>
+          <li class="nav-item"><a class="nav-link" href="proveedores.html"><i class="bi bi-truck me-1"></i>Proveedores</a></li>
+          <li class="nav-item"><a class="nav-link" href="productos.html"><i class="bi bi-box me-1"></i>Productos</a></li>
+          <li class="nav-item"><a class="nav-link" href="ventas.html"><i class="bi bi-receipt me-1"></i>Ventas</a></li>
+          <li class="nav-item ms-2"><a class="nav-link btn-tienda" href="../tienda/index.html"><i class="bi bi-shop me-1"></i>Ir a la Tienda</a></li>
+        </ul>
+      </div>
     </div>
-  </div>
-</nav>
+  </nav>
 
   <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
       <div>
-        <h2 class="fw-bold mb-0" style="color:var(--primary-900);"><i class="bi bi-person me-2"></i>Clientes</h2>
-        <p class="text-muted mb-0" style="font-size:0.875rem;">Gestión de base de clientes</p>
+        <h2 class="fw-bold mb-0" style="color:var(--primary-900);"><i class="bi bi-people me-2"></i>Empleados</h2>
+        <p class="text-muted mb-0" style="font-size:0.875rem;">Controla el personal de cada sucursal</p>
       </div>
-      <button class="btn btn-primary-exp" onclick="mostrarFormulario()">
-        <i class="bi bi-plus-lg me-1"></i>Nuevo Cliente
-      </button>
+      <button class="btn btn-primary-exp" id="btnNuevo"><i class="bi bi-plus-lg me-1"></i>Nuevo Empleado</button>
     </div>
 
     <div class="form-card d-none" id="seccionFormulario">
-      <h5 id="formTitle"><i class="bi bi-plus-circle me-2"></i>Agregar Cliente</h5>
-      <form id="formclientes">
-        <div class="row g-3" id="camposForm"></div>
+      <h5 id="formTitle"><i class="bi bi-plus-circle me-2"></i>Nuevo Empleado</h5>
+      <form id="formempleados">
+        <div class="row g-3">
+          <div class="col-md-2">
+            <label class="form-label fw-semibold" style="font-size:0.82rem;">ID <span class="badge bg-secondary ms-1" style="font-size:0.65rem;">Auto</span></label>
+            <input type="number" id="id" class="form-control form-control-sm" readonly tabindex="-1">
+          </div>
+          <div class="col-md-4">
+            <!-- Sucursal: SELECT poblado desde API -->
+            <label class="form-label fw-semibold" style="font-size:0.82rem;">Sucursal <span class="text-danger">*</span></label>
+            <select id="sucursal_id" class="form-select form-select-sm" required>
+              <option value="">— Selecciona sucursal —</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-semibold" style="font-size:0.82rem;">Puesto <span class="text-danger">*</span></label>
+            <select id="puesto" class="form-select form-select-sm" required>
+              <option value="">— Selecciona puesto —</option>
+              <option value="Gerente">Gerente</option>
+              <option value="Cajero">Cajero</option>
+              <option value="Almacenista">Almacenista</option>
+              <option value="Repartidor">Repartidor</option>
+              <option value="Vigilante">Vigilante</option>
+              <option value="Vendedor">Vendedor</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-semibold" style="font-size:0.82rem;">Turno</label>
+            <select id="turno" class="form-select form-select-sm">
+              <option value="Matutino">☀️ Matutino</option>
+              <option value="Vespertino">🌤️ Vespertino</option>
+              <option value="Nocturno">🌙 Nocturno</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-semibold" style="font-size:0.82rem;">Nombre <span class="text-danger">*</span></label>
+            <input type="text" id="nombre" class="form-control form-control-sm" placeholder="Nombre(s)" required>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-semibold" style="font-size:0.82rem;">Apellido Paterno</label>
+            <input type="text" id="apellido_paterno" class="form-control form-control-sm" placeholder="Apellido paterno">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-semibold" style="font-size:0.82rem;">Apellido Materno</label>
+            <input type="text" id="apellido_materno" class="form-control form-control-sm" placeholder="Apellido materno">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-semibold" style="font-size:0.82rem;">Estatus</label>
+            <select id="estatus" class="form-select form-select-sm">
+              <option value="Activo">✅ Activo</option>
+              <option value="Inactivo">❌ Inactivo</option>
+              <option value="Vacaciones">🏖️ Vacaciones</option>
+              <option value="Baja">🚫 Baja</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-semibold" style="font-size:0.82rem;">Teléfono</label>
+            <input type="tel" id="telefono" class="form-control form-control-sm" placeholder="614-123-4567">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold" style="font-size:0.82rem;">Email</label>
+            <input type="email" id="email" class="form-control form-control-sm" placeholder="empleado@expendio.mx">
+          </div>
+          <div class="col-md-2">
+            <label class="form-label fw-semibold" style="font-size:0.82rem;">Salario</label>
+            <input type="number" id="salario" class="form-control form-control-sm" placeholder="0.00" step="0.01" min="0">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-semibold" style="font-size:0.82rem;">Fecha de ingreso <span class="badge bg-secondary ms-1" style="font-size:0.65rem;">Auto</span></label>
+            <input type="date" id="fecha_ingreso" class="form-control form-control-sm">
+          </div>
+        </div>
         <div class="d-flex gap-2 mt-3">
           <button type="submit" class="btn btn-primary-exp"><i class="bi bi-save me-1"></i>Guardar</button>
-          <button type="button" class="btn btn-outline-secondary" onclick="ocultarFormulario()"><i class="bi bi-x me-1"></i>Cancelar</button>
+          <button type="button" class="btn btn-outline-secondary" id="btnCancel"><i class="bi bi-x me-1"></i>Cancelar</button>
         </div>
       </form>
     </div>
@@ -56,7 +119,7 @@
     <div class="tabla-gestion">
       <table class="table mb-0">
         <thead>
-          <tr><th>ID</th><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Acciones</th></tr>
+          <tr><th>ID</th><th>Nombre</th><th>Sucursal</th><th>Puesto</th><th>Turno</th><th>Teléfono</th><th>Estatus</th><th>Acciones</th></tr>
         </thead>
         <tbody id="tableBody"></tbody>
       </table>
@@ -69,7 +132,7 @@
         <span class="fw-bold text-white fs-6">🍺 Expendio FS</span>
         <ul class="list-inline mb-0">
           <li class="list-inline-item"><a href="index.html">Inicio</a></li>
-          <li class="list-inline-item ms-3"><a href="tienda.html">Tienda</a></li>
+          <li class="list-inline-item ms-3"><a href="ventas.html">Ventas</a></li>
         </ul>
       </div>
       <hr class="footer-divider">
@@ -78,15 +141,7 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    function mostrarFormulario() {
-      document.getElementById('seccionFormulario').classList.remove('d-none');
-      document.getElementById('seccionFormulario').scrollIntoView({ behavior: 'smooth' });
-    }
-    function ocultarFormulario() {
-      document.getElementById('seccionFormulario').classList.add('d-none');
-    }
-  </script>
-  <script src="/js/clientes.js"></script>
+  <script src="js/admin-utils.js"></script>
+  <script src="js/empleados.js"></script>
 </body>
 </html>

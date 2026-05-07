@@ -1,4 +1,5 @@
 const Venta = require('../models/ventas');
+const { resequenceAfterDelete } = require('../config/resequence');
 
 exports.getAll = async (req, res) => {
   try {
@@ -38,8 +39,10 @@ exports.update = async (req, res) => {
 
 exports.delete = async (req, res) => {
   try {
-    await Venta.delete(req.params.id);
-    res.json({ message: 'Venta eliminada' });
+    const id = Number(req.params.id);
+    await Venta.delete(id);
+    await resequenceAfterDelete('ventas', id);
+    res.json({ message: 'Venta eliminada y IDs reordenados' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

@@ -40,7 +40,7 @@
         <div class="col-lg-8">
           <h1>¡Bienvenido al Panel de Control!</h1>
           <p>Gestiona sucursales, empleados, inventario, ventas y más desde un solo lugar.</p>
-          <a href="tienda.html" class="btn btn-accent me-2"><i class="bi bi-shop me-1"></i>Ir a la Tienda</a>
+          <a href="../tienda/index.html" class="btn btn-accent me-2"><i class="bi bi-shop me-1"></i>Ir a la Tienda</a>
           <a href="ventas.html" class="btn btn-outline-light"><i class="bi bi-receipt me-1"></i>Ver Ventas</a>
         </div>
         <div class="col-lg-4 text-center d-none d-lg-block" style="font-size:6rem; opacity:0.2;">🍺</div>
@@ -56,6 +56,7 @@
           <div class="modulo-icon">🏪</div>
           <h5>Sucursales</h5>
           <p>Administra las sucursales del negocio.</p>
+          <div class="mt-2 text-muted" style="font-size: 0.8rem;">Total: <strong id="stat-sucursales">0</strong></div>
           <span class="btn-ir"><i class="bi bi-arrow-right me-1"></i>Gestionar</span>
         </a>
       </div>
@@ -65,6 +66,7 @@
           <div class="modulo-icon">👥</div>
           <h5>Empleados</h5>
           <p>Controla el personal de cada sucursal.</p>
+          <div class="mt-2 text-muted" style="font-size: 0.8rem;">Total: <strong id="stat-empleados">0</strong></div>
           <span class="btn-ir"><i class="bi bi-arrow-right me-1"></i>Gestionar</span>
         </a>
       </div>
@@ -74,6 +76,7 @@
           <div class="modulo-icon">🙋</div>
           <h5>Clientes</h5>
           <p>Registra y consulta la base de clientes.</p>
+          <div class="mt-2 text-muted" style="font-size: 0.8rem;">Total: <strong id="stat-clientes">0</strong></div>
           <span class="btn-ir"><i class="bi bi-arrow-right me-1"></i>Gestionar</span>
         </a>
       </div>
@@ -83,6 +86,7 @@
           <div class="modulo-icon">🚚</div>
           <h5>Proveedores</h5>
           <p>Gestiona contactos y proveedores activos.</p>
+          <div class="mt-2 text-muted" style="font-size: 0.8rem;">Total: <strong id="stat-proveedores">0</strong></div>
           <span class="btn-ir"><i class="bi bi-arrow-right me-1"></i>Gestionar</span>
         </a>
       </div>
@@ -92,6 +96,7 @@
           <div class="modulo-icon">📦</div>
           <h5>Productos</h5>
           <p>Inventario, precios y existencias.</p>
+          <div class="mt-2 text-muted" style="font-size: 0.8rem;">Total: <strong id="stat-productos">0</strong></div>
           <span class="btn-ir"><i class="bi bi-arrow-right me-1"></i>Gestionar</span>
         </a>
       </div>
@@ -101,6 +106,9 @@
           <div class="modulo-icon">🧾</div>
           <h5>Ventas</h5>
           <p>Registro y seguimiento de ventas.</p>
+          <div class="mt-2 text-muted" style="font-size: 0.8rem;">
+            Total: <strong id="stat-ventas">0</strong> | Ingresos: <strong id="stat-total-ventas">$0.00</strong>
+          </div>
           <span class="btn-ir"><i class="bi bi-arrow-right me-1"></i>Gestionar</span>
         </a>
       </div>
@@ -115,7 +123,7 @@
         <span class="fw-bold text-white fs-6">🍺 Expendio FS</span>
         <ul class="list-inline mb-0">
           <li class="list-inline-item"><a href="index.html">Inicio</a></li>
-          <li class="list-inline-item ms-3"><a href="tienda.html">Tienda</a></li>
+          <li class="list-inline-item ms-3"><a href="../tienda/index.html">Tienda</a></li>
           <li class="list-inline-item ms-3"><a href="ventas.html">Ventas</a></li>
         </ul>
       </div>
@@ -125,5 +133,27 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/admin-utils.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const res = await fetch('/api/stats');
+        if (res.ok) {
+          const stats = await res.json();
+          document.getElementById('stat-sucursales').textContent = stats.sucursales;
+          document.getElementById('stat-empleados').textContent = stats.empleados;
+          document.getElementById('stat-clientes').textContent = stats.clientes;
+          document.getElementById('stat-proveedores').textContent = stats.proveedores;
+          document.getElementById('stat-productos').textContent = stats.productos;
+          document.getElementById('stat-ventas').textContent = stats.ventas;
+          if (document.getElementById('stat-total-ventas')) {
+             document.getElementById('stat-total-ventas').textContent = formatDinero(stats.totalVentas);
+          }
+        }
+      } catch (error) {
+        console.error('Error cargando stats:', error);
+      }
+    });
+  </script>
 </body>
 </html>

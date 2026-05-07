@@ -20,6 +20,7 @@ app.get('/', (req, res) => {
 });
 
 // Rutas de la API (admin)
+app.use('/api',             require('./routes/utilsRoutes'));
 app.use('/api/clientes',    require('./routes/clientesRoutes'));
 app.use('/api/sucursales',  require('./routes/sucursalesRoutes'));
 app.use('/api/empleados',   require('./routes/empleadosRoutes'));

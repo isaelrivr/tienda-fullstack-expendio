@@ -2,47 +2,37 @@
 //   TIENDA.JS — Catálogo público de productos
 // =============================================
 
-// --- ESTADO GLOBAL ---
 let todosLosProductos = [];
-let carrito = JSON.parse(localStorage.getItem('carrito_expendio')) || [];
+let carrito = leerCarrito(); // desde carrito-utils.js
 
-// --- INICIALIZAR ---
 document.addEventListener('DOMContentLoaded', () => {
   cargarProductos();
-  renderizarCarrito();
+  renderizarCarritoDrawer();
   actualizarBadge();
 
-  // Buscador
   document.getElementById('buscador').addEventListener('input', aplicarFiltros);
 
-  // Filtro precio
-  const sliderPrecio = document.getElementById('filtroPrecio');
-  sliderPrecio.addEventListener('input', () => {
-    document.getElementById('precioMaxLabel').textContent =
-      '$' + Number(sliderPrecio.value).toLocaleString();
+  document.getElementById('filtroPrecio').addEventListener('input', function () {
+    document.getElementById('precioMaxLabel').textContent = formatPrecio(this.value);
     aplicarFiltros();
   });
 
-  // Ordenar
   document.getElementById('ordenar').addEventListener('change', aplicarFiltros);
-
-  // Botón carrito navbar
   document.getElementById('btnAbrirCarrito').addEventListener('click', abrirCarrito);
 });
 
-// --- CARGAR PRODUCTOS DESDE EL BACKEND ---
+// ── Cargar productos ─────────────────────────────────────────────────────────
 async function cargarProductos() {
   try {
     const res = await fetch('/api/productos');
-    if (!res.ok) throw new Error('Error al cargar productos');
-    todosLosProductos = await res.json();
+    if (!res.ok) throw new Error('Error ' + res.status);
+    todosLosProductos = (await res.json()).filter(p => p.activo != 0);
 
-    // Calcular precio máximo real para el slider
-    const maxPrecio = Math.max(...todosLosProductos.map(p => Number(p.precio) || 0));
+    const maxPrecio = Math.max(...todosLosProductos.map(p => Number(p.precio) || 0), 0);
     const slider = document.getElementById('filtroPrecio');
-    slider.max = maxPrecio || 1000;
+    slider.max   = maxPrecio || 1000;
     slider.value = maxPrecio || 1000;
-    document.getElementById('precioMaxLabel').textContent = '$' + (maxPrecio || 1000).toLocaleString();
+    document.getElementById('precioMaxLabel').textContent = formatPrecio(maxPrecio || 1000);
 
     generarCategorias();
     aplicarFiltros();
@@ -50,92 +40,74 @@ async function cargarProductos() {
     console.error(e);
     document.getElementById('estadoCarga').innerHTML = `
       <i class="bi bi-exclamation-circle fs-1 text-danger d-block mb-2"></i>
-      <p class="text-danger">No se pudieron cargar los productos. Verifica que el servidor esté corriendo.</p>
+      <p class="text-danger">No se pudieron cargar los productos.<br>Verifica que el servidor esté corriendo.</p>
     `;
   }
 }
 
-// --- GENERAR CHECKBOXES DE CATEGORÍAS ---
+// ── Categorías dinámicas ──────────────────────────────────────────────────────
 function generarCategorias() {
-  const categorias = [...new Set(
-    todosLosProductos.map(p => p.categoria).filter(Boolean)
-  )].sort();
-
+  const categorias = [...new Set(todosLosProductos.map(p => p.categoria).filter(Boolean))].sort();
   const contenedor = document.getElementById('listaCategorias');
-  // Conservar el radio "Todas"
-  const todasHtml = `
+  contenedor.innerHTML = `
     <div class="form-check mb-2">
       <input class="form-check-input" type="radio" name="categoria" id="cat-todas" value="" checked>
       <label class="form-check-label" for="cat-todas">Todas</label>
-    </div>`;
-
-  const cats = categorias.map((cat, i) => `
+    </div>
+    ${categorias.map((cat, i) => `
     <div class="form-check mb-2">
       <input class="form-check-input" type="radio" name="categoria" id="cat-${i}" value="${cat}">
-      <label class="form-check-label" for="cat-${i}">${cat}</label>
-    </div>`).join('');
-
-  contenedor.innerHTML = todasHtml + cats;
-
-  // Evento a los radios
-  contenedor.querySelectorAll('input[type=radio]').forEach(radio => {
-    radio.addEventListener('change', aplicarFiltros);
-  });
+      <label class="form-check-label" for="cat-${i}">${getEmojiCategoria(cat)} ${cat}</label>
+    </div>`).join('')}
+  `;
+  contenedor.querySelectorAll('input[type=radio]').forEach(r => r.addEventListener('change', aplicarFiltros));
 }
 
-// --- APLICAR FILTROS Y RENDERIZAR ---
+// ── Filtros ───────────────────────────────────────────────────────────────────
 function aplicarFiltros() {
-  const busqueda   = document.getElementById('buscador').value.toLowerCase().trim();
-  const categoria  = document.querySelector('input[name="categoria"]:checked')?.value || '';
-  const precioMax  = Number(document.getElementById('filtroPrecio').value);
-  const orden      = document.getElementById('ordenar').value;
+  const busqueda  = document.getElementById('buscador').value.toLowerCase().trim();
+  const categoria = document.querySelector('input[name="categoria"]:checked')?.value || '';
+  const precioMax = Number(document.getElementById('filtroPrecio').value);
+  const orden     = document.getElementById('ordenar').value;
 
-  let resultado = todosLosProductos.filter(p => {
-    const coincideBusqueda =
-      (p.nombre  || '').toLowerCase().includes(busqueda) ||
-      (p.marca   || '').toLowerCase().includes(busqueda) ||
-      (p.categoria || '').toLowerCase().includes(busqueda);
+  let resultado = todosLosProductos.filter(p =>
+    (!busqueda || [p.nombre, p.marca, p.categoria].some(v => (v||'').toLowerCase().includes(busqueda))) &&
+    (!categoria  || p.categoria === categoria) &&
+    (Number(p.precio) <= precioMax)
+  );
 
-    const coincideCategoria = categoria === '' || p.categoria === categoria;
-    const coincidePrecio    = Number(p.precio) <= precioMax;
-
-    return coincideBusqueda && coincideCategoria && coincidePrecio;
-  });
-
-  // Ordenar
   resultado.sort((a, b) => {
     if (orden === 'precio_asc')  return Number(a.precio) - Number(b.precio);
     if (orden === 'precio_desc') return Number(b.precio) - Number(a.precio);
     if (orden === 'stock')       return Number(b.stock)  - Number(a.stock);
-    return (a.nombre || '').localeCompare(b.nombre || ''); // nombre A-Z
+    return (a.nombre || '').localeCompare(b.nombre || '');
   });
 
   renderizarProductos(resultado);
 }
 
-// --- RENDERIZAR GRID DE PRODUCTOS ---
+// ── Renderizar grid ───────────────────────────────────────────────────────────
 function renderizarProductos(productos) {
-  const grid       = document.getElementById('gridProductos');
-  const carga      = document.getElementById('estadoCarga');
-  const vacio      = document.getElementById('estadoVacio');
-  const conteo     = document.getElementById('conteoProductos');
+  const grid  = document.getElementById('gridProductos');
+  const carga = document.getElementById('estadoCarga');
+  const vacio = document.getElementById('estadoVacio');
 
   carga.classList.add('d-none');
-  conteo.textContent = productos.length;
+  document.getElementById('conteoProductos').textContent = productos.length;
 
   if (productos.length === 0) {
     grid.innerHTML = '';
     vacio.classList.remove('d-none');
     return;
   }
-
   vacio.classList.add('d-none');
 
   grid.innerHTML = productos.map(p => {
-    const precio    = Number(p.precio)  || 0;
-    const stock     = Number(p.stock)   || 0;
-    const agotado   = stock === 0;
-    const emoji     = getEmojiCategoria(p.categoria);
+    const precio  = Number(p.precio) || 0;
+    const stock   = Number(p.stock)  || 0;
+    const agotado = stock === 0;
+    const emoji   = getEmojiCategoria(p.categoria);
+    const enCarrito = carrito.find(i => i.id === p.id)?.cantidad || 0;
 
     return `
       <div class="col-sm-6 col-xl-4">
@@ -146,12 +118,13 @@ function renderizarProductos(productos) {
             <h6 class="product-nombre">${p.nombre || 'Sin nombre'}</h6>
             <span class="product-marca">${p.marca || ''}</span>
             <div class="d-flex align-items-center justify-content-between mt-1">
-              <span class="product-precio">$${precio.toFixed(2)}</span>
+              <span class="product-precio">${formatPrecio(precio)}</span>
               <span class="product-stock ${agotado ? 'agotado' : ''}">
                 <i class="bi bi-circle-fill me-1" style="font-size:0.5rem;"></i>
                 ${agotado ? 'Agotado' : `Stock: ${stock}`}
               </span>
             </div>
+            ${enCarrito > 0 ? `<div class="text-success" style="font-size:0.78rem; margin-top:4px;"><i class="bi bi-check-circle me-1"></i>En carrito: ${enCarrito}</div>` : ''}
             <button
               class="btn-agregar"
               onclick="agregarAlCarrito(${p.id})"
@@ -165,56 +138,39 @@ function renderizarProductos(productos) {
   }).join('');
 }
 
-// --- EMOJI POR CATEGORÍA ---
-function getEmojiCategoria(categoria) {
-  if (!categoria) return '📦';
-  const c = categoria.toLowerCase();
-  if (c.includes('cerveza'))   return '🍺';
-  if (c.includes('vino'))      return '🍷';
-  if (c.includes('whisky') || c.includes('whiskey')) return '🥃';
-  if (c.includes('vodka'))     return '🍸';
-  if (c.includes('ron'))       return '🍹';
-  if (c.includes('refresco') || c.includes('soda')) return '🥤';
-  if (c.includes('agua'))      return '💧';
-  if (c.includes('tequila'))   return '🌵';
-  if (c.includes('mezcal'))    return '🌿';
-  return '🍶';
-}
-
-// --- AGREGAR AL CARRITO ---
+// ── Carrito: operaciones ──────────────────────────────────────────────────────
 function agregarAlCarrito(id) {
   const producto = todosLosProductos.find(p => p.id === id);
   if (!producto) return;
 
-  const existente = carrito.find(item => item.id === id);
+  const existente = carrito.find(i => i.id === id);
   if (existente) {
     existente.cantidad++;
   } else {
     carrito.push({
-      id:       producto.id,
-      nombre:   producto.nombre,
-      precio:   Number(producto.precio),
-      marca:    producto.marca,
+      id:        producto.id,
+      nombre:    producto.nombre,
+      precio:    Number(producto.precio),
+      marca:     producto.marca,
       categoria: producto.categoria,
-      cantidad: 1
+      cantidad:  1
     });
   }
 
-  guardarCarrito();
-  renderizarCarrito();
+  guardarCarritoLS(carrito);
+  renderizarCarritoDrawer();
   actualizarBadge();
+  // Re-renderizar para mostrar "En carrito: N"
+  aplicarFiltros();
   abrirCarrito();
 }
 
-// --- RENDERIZAR CARRITO EN EL DRAWER ---
-function renderizarCarrito() {
+function renderizarCarritoDrawer() {
   const body = document.getElementById('carritoBody');
-
   if (carrito.length === 0) {
     body.innerHTML = `
       <p class="text-center text-muted mt-4">
-        <i class="bi bi-cart-x fs-1 d-block mb-2"></i>
-        Tu carrito está vacío
+        <i class="bi bi-cart-x fs-1 d-block mb-2"></i>Tu carrito está vacío
       </p>`;
     document.getElementById('subtotalVal').textContent = '$0.00';
     document.getElementById('totalVal').textContent    = '$0.00';
@@ -226,12 +182,12 @@ function renderizarCarrito() {
       <div class="ci-icon">${getEmojiCategoria(item.categoria)}</div>
       <div class="ci-info">
         <div class="ci-nombre">${item.nombre}</div>
-        <div class="ci-precio">$${(item.precio * item.cantidad).toFixed(2)}</div>
+        <div class="ci-precio">${formatPrecio(item.precio * item.cantidad)}</div>
         <div class="qty-control mt-1">
-          <button onclick="cambiarCantidad(${item.id}, -1)">−</button>
+          <button onclick="cambiarCantidadDrawer(${item.id}, -1)">−</button>
           <span style="font-size:0.875rem; font-weight:600;">${item.cantidad}</span>
-          <button onclick="cambiarCantidad(${item.id}, 1)">+</button>
-          <button onclick="eliminarDelCarrito(${item.id})"
+          <button onclick="cambiarCantidadDrawer(${item.id}, 1)">+</button>
+          <button onclick="eliminarDrawer(${item.id})"
             style="margin-left:0.5rem; background:none; border:none; color:var(--danger); cursor:pointer; font-size:1rem;">
             <i class="bi bi-trash"></i>
           </button>
@@ -239,44 +195,35 @@ function renderizarCarrito() {
       </div>
     </div>`).join('');
 
-  const subtotal = carrito.reduce((acc, i) => acc + i.precio * i.cantidad, 0);
-  document.getElementById('subtotalVal').textContent = '$' + subtotal.toFixed(2);
-  document.getElementById('totalVal').textContent    = '$' + subtotal.toFixed(2);
+  const subtotal = calcularSubtotal(carrito);
+  document.getElementById('subtotalVal').textContent = formatPrecio(subtotal);
+  document.getElementById('totalVal').textContent    = formatPrecio(subtotal);
 }
 
-// --- CAMBIAR CANTIDAD ---
-function cambiarCantidad(id, delta) {
+function cambiarCantidadDrawer(id, delta) {
   const item = carrito.find(i => i.id === id);
   if (!item) return;
   item.cantidad += delta;
-  if (item.cantidad <= 0) {
-    carrito = carrito.filter(i => i.id !== id);
-  }
-  guardarCarrito();
-  renderizarCarrito();
+  if (item.cantidad <= 0) carrito = carrito.filter(i => i.id !== id);
+  guardarCarritoLS(carrito);
+  renderizarCarritoDrawer();
   actualizarBadge();
+  aplicarFiltros();
 }
 
-// --- ELIMINAR DEL CARRITO ---
-function eliminarDelCarrito(id) {
+function eliminarDrawer(id) {
   carrito = carrito.filter(i => i.id !== id);
-  guardarCarrito();
-  renderizarCarrito();
+  guardarCarritoLS(carrito);
+  renderizarCarritoDrawer();
   actualizarBadge();
+  aplicarFiltros();
 }
 
-// --- BADGE CONTADOR ---
 function actualizarBadge() {
   const total = carrito.reduce((acc, i) => acc + i.cantidad, 0);
   document.getElementById('carritoCount').textContent = total;
 }
 
-// --- GUARDAR EN LOCALSTORAGE ---
-function guardarCarrito() {
-  localStorage.setItem('carrito_expendio', JSON.stringify(carrito));
-}
-
-// --- ABRIR / CERRAR DRAWER ---
 function abrirCarrito() {
   document.getElementById('carritoDrawer').classList.add('open');
   document.getElementById('carritoOverlay').classList.add('open');
@@ -287,13 +234,13 @@ function cerrarCarrito() {
   document.getElementById('carritoOverlay').classList.remove('open');
 }
 
-// --- LIMPIAR FILTROS ---
 function limpiarFiltros() {
   document.getElementById('buscador').value = '';
-  document.querySelector('input[name="categoria"][value=""]').checked = true;
+  const radio = document.querySelector('input[name="categoria"][value=""]');
+  if (radio) radio.checked = true;
   const slider = document.getElementById('filtroPrecio');
   slider.value = slider.max;
-  document.getElementById('precioMaxLabel').textContent = '$' + Number(slider.max).toLocaleString();
+  document.getElementById('precioMaxLabel').textContent = formatPrecio(slider.max);
   document.getElementById('ordenar').value = 'nombre';
   aplicarFiltros();
 }

@@ -6,39 +6,37 @@
   <title>Checkout - Expendio FS</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
- <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
- <nav class="navbar navbar-expand-lg navbar-expendio">
-  <div class="container">
-    <a class="navbar-brand" href="index.html">
-      <span class="brand-icon">🍺</span> Expendio FS — Tienda
-    </a>
-    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto align-items-lg-center gap-1">
-        <li class="nav-item"><a class="nav-link" href="index.html"><i class="bi bi-shop me-1"></i>Tienda</a></li>
-        <li class="nav-item"><a class="nav-link" href="carrito.html"><i class="bi bi-cart3 me-1"></i>Carrito</a></li>
-        <li class="nav-item ms-2">
-          <button class="btn btn-outline-light btn-sm carrito-badge" id="btnAbrirCarrito">
-            <i class="bi bi-cart3 fs-5"></i>
-            <span class="badge-count" id="carritoCount">0</span>
-          </button>
-        </li>
-      </ul>
+  <nav class="navbar navbar-expand-lg navbar-expendio">
+    <div class="container">
+      <a class="navbar-brand" href="index.html"><span class="brand-icon">🍺</span> Expendio FS — Tienda</a>
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-1">
+          <li class="nav-item"><a class="nav-link" href="index.html"><i class="bi bi-shop me-1"></i>Tienda</a></li>
+          <li class="nav-item"><a class="nav-link" href="carrito.html"><i class="bi bi-cart3 me-1"></i>Carrito</a></li>
+          <li class="nav-item ms-2">
+            <a href="carrito.html" class="btn btn-outline-light btn-sm carrito-badge">
+              <i class="bi bi-cart3 fs-5"></i>
+              <span class="badge-count" id="carritoCount">0</span>
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
-  </div>
-</nav>
+  </nav>
+
   <div class="container mt-4">
 
     <!-- BREADCRUMB -->
     <nav aria-label="breadcrumb" class="mb-4">
       <ol class="breadcrumb" style="font-size:0.85rem;">
         <li class="breadcrumb-item"><a href="index.html" class="text-decoration-none">Inicio</a></li>
-        <li class="breadcrumb-item"><a href="tienda.html" class="text-decoration-none">Tienda</a></li>
         <li class="breadcrumb-item"><a href="carrito.html" class="text-decoration-none">Carrito</a></li>
         <li class="breadcrumb-item active">Checkout</li>
       </ol>
@@ -46,7 +44,7 @@
 
     <!-- PASOS -->
     <div class="d-flex align-items-center gap-2 mb-4" style="font-size:0.85rem;">
-      <span class="badge rounded-pill px-3 py-2 bg-secondary">1. Carrito</span>
+      <a href="carrito.html" class="badge rounded-pill px-3 py-2 bg-secondary text-decoration-none">1. Carrito</a>
       <i class="bi bi-chevron-right text-muted"></i>
       <span class="badge rounded-pill px-3 py-2" style="background:var(--primary-900);">2. Datos</span>
       <i class="bi bi-chevron-right text-muted"></i>
@@ -57,7 +55,7 @@
     <div id="pantallaVacia" class="text-center py-5 d-none">
       <i class="bi bi-cart-x fs-1 text-muted d-block mb-3"></i>
       <p class="text-muted mb-3">No tienes productos en el carrito.</p>
-      <a href="tienda.html" class="btn btn-primary-exp">
+      <a href="index.html" class="btn btn-primary-exp">
         <i class="bi bi-shop me-1"></i>Ir a la tienda
       </a>
     </div>
@@ -72,20 +70,20 @@
             <h5><i class="bi bi-person-lines-fill me-2"></i>Datos del cliente</h5>
             <div class="row g-3">
               <div class="col-md-6">
-                <label class="form-label fw-semibold" style="font-size:0.85rem;">Nombre *</label>
-                <input type="text" class="form-control" id="ckNombre" placeholder="Tu nombre">
+                <label class="form-label fw-semibold" style="font-size:0.85rem;">Nombre <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="ckNombre" placeholder="Tu nombre" autocomplete="given-name">
               </div>
               <div class="col-md-6">
-                <label class="form-label fw-semibold" style="font-size:0.85rem;">Apellido *</label>
-                <input type="text" class="form-control" id="ckApellido" placeholder="Tu apellido">
+                <label class="form-label fw-semibold" style="font-size:0.85rem;">Apellido <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="ckApellido" placeholder="Tu apellido" autocomplete="family-name">
               </div>
               <div class="col-md-6">
-                <label class="form-label fw-semibold" style="font-size:0.85rem;">Teléfono *</label>
-                <input type="tel" class="form-control" id="ckTelefono" placeholder="Ej. 871 123 4567">
+                <label class="form-label fw-semibold" style="font-size:0.85rem;">Teléfono <span class="text-danger">*</span></label>
+                <input type="tel" class="form-control" id="ckTelefono" placeholder="Ej. 614 123 4567" autocomplete="tel">
               </div>
               <div class="col-md-6">
                 <label class="form-label fw-semibold" style="font-size:0.85rem;">Email</label>
-                <input type="email" class="form-control" id="ckEmail" placeholder="correo@ejemplo.com">
+                <input type="email" class="form-control" id="ckEmail" placeholder="correo@ejemplo.com" autocomplete="email">
               </div>
             </div>
           </div>
@@ -94,31 +92,31 @@
             <h5><i class="bi bi-geo-alt me-2"></i>Dirección de entrega</h5>
             <div class="row g-3">
               <div class="col-12">
-                <label class="form-label fw-semibold" style="font-size:0.85rem;">Calle y número *</label>
-                <input type="text" class="form-control" id="ckDireccion" placeholder="Ej. Av. Juárez 123">
+                <label class="form-label fw-semibold" style="font-size:0.85rem;">Calle y número <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="ckDireccion" placeholder="Ej. Av. Juárez 123" autocomplete="street-address">
               </div>
               <div class="col-md-6">
                 <label class="form-label fw-semibold" style="font-size:0.85rem;">Colonia</label>
                 <input type="text" class="form-control" id="ckColonia" placeholder="Colonia">
               </div>
               <div class="col-md-6">
-                <label class="form-label fw-semibold" style="font-size:0.85rem;">Ciudad *</label>
-                <input type="text" class="form-control" id="ckCiudad" placeholder="Ciudad">
+                <label class="form-label fw-semibold" style="font-size:0.85rem;">Ciudad <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="ckCiudad" placeholder="Ciudad" autocomplete="address-level2">
               </div>
               <div class="col-md-6">
                 <label class="form-label fw-semibold" style="font-size:0.85rem;">Estado</label>
-                <input type="text" class="form-control" id="ckEstado" placeholder="Estado">
+                <input type="text" class="form-control" id="ckEstado" placeholder="Estado" autocomplete="address-level1">
               </div>
               <div class="col-md-6">
                 <label class="form-label fw-semibold" style="font-size:0.85rem;">C.P.</label>
-                <input type="text" class="form-control" id="ckCP" placeholder="Código postal">
+                <input type="text" class="form-control" id="ckCP" placeholder="Código postal" autocomplete="postal-code">
               </div>
             </div>
           </div>
 
           <div class="form-card">
             <h5><i class="bi bi-credit-card me-2"></i>Método de pago</h5>
-            <div class="row g-3">
+            <div class="row g-2">
               <div class="col-12">
                 <div class="form-check mb-2">
                   <input class="form-check-input" type="radio" name="metodoPago" id="pagoEfectivo" value="Efectivo" checked>
@@ -148,7 +146,7 @@
             <span id="errorMsg"></span>
           </div>
 
-          <button class="btn btn-primary-exp w-100 py-3" onclick="confirmarPedido()" style="font-size:1rem;">
+          <button class="btn btn-primary-exp w-100 py-3" onclick="confirmarPedido()" id="btnConfirmar" style="font-size:1rem;">
             <i class="bi bi-bag-check me-2"></i>Confirmar pedido
           </button>
         </div>
@@ -165,6 +163,9 @@
             <div class="cs-row"><span>Envío</span><span class="text-success fw-semibold">Gratis</span></div>
             <div class="cs-total"><span>Total</span><span id="ckTotal">$0.00</span></div>
           </div>
+          <a href="carrito.html" class="btn btn-outline-secondary btn-sm w-100">
+            <i class="bi bi-arrow-left me-1"></i>Volver al carrito
+          </a>
         </div>
 
       </div>
@@ -172,11 +173,11 @@
 
     <!-- PANTALLA: CONFIRMACIÓN -->
     <div id="pantallaConfirmacion" class="d-none">
-      <div class="text-center py-5">
+      <div class="text-center py-4">
         <div style="font-size:5rem; margin-bottom:1rem;">✅</div>
         <h2 class="fw-bold mb-2" style="color:var(--primary-900);">¡Pedido confirmado!</h2>
         <p class="text-muted mb-1">Gracias por tu compra. Tu pedido ha sido registrado.</p>
-        <p class="text-muted mb-4" id="ckFolio" style="font-size:0.9rem;"></p>
+        <p class="text-muted mb-4" id="ckFolio" style="font-size:0.9rem; font-weight:600;"></p>
 
         <div class="checkout-summary mx-auto mb-4" style="max-width:480px; text-align:left;">
           <h6 class="fw-bold mb-3" style="color:var(--primary-900);">Resumen del pedido</h6>
@@ -187,11 +188,11 @@
         </div>
 
         <div class="d-flex gap-3 justify-content-center flex-wrap">
-          <a href="tienda.html" class="btn btn-primary-exp">
+          <a href="index.html" class="btn btn-primary-exp">
             <i class="bi bi-shop me-1"></i>Seguir comprando
           </a>
-          <a href="index.html" class="btn btn-outline-secondary">
-            <i class="bi bi-house me-1"></i>Ir al inicio
+          <a href="../admin/ventas.html" class="btn btn-outline-secondary">
+            <i class="bi bi-receipt me-1"></i>Ver en Admin
           </a>
         </div>
       </div>
@@ -199,7 +200,22 @@
 
   </div>
 
-  <!-- FOOTER -->
   <footer class="footer-expendio mt-5">
     <div class="container">
-      <div class="d-flex flex-column flexs
+      <div class="d-flex flex-column flex-lg-row align-items-center justify-content-between gap-3">
+        <span class="fw-bold text-white fs-6">🍺 Expendio FS</span>
+        <ul class="list-inline mb-0">
+          <li class="list-inline-item"><a href="index.html">Tienda</a></li>
+          <li class="list-inline-item ms-3"><a href="carrito.html">Carrito</a></li>
+        </ul>
+      </div>
+      <hr class="footer-divider">
+      <p class="text-center mb-0" style="font-size:0.8rem;">© 2025 Expendio de Bebidas. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/carrito-utils.js"></script>
+  <script src="js/checkout.js"></script>
+</body>
+</html>
